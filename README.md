@@ -73,18 +73,17 @@ public class Player : MonoBehaviour
 ``` Unity3D
 public struct EventHpGradient
 {
-	public EventHpGradient(int hp)
-	{
+    public EventHpGradient(int hp)
+    {
         this.hp=hp;
-	}
-	
-	public int hp;
-	
-	public Excute(Slider hpBar)
-	{
+    }
+
+    public int hp;
+
+    public Excute(Slider hpBar)
+    {
         //血条渐变效果
-	}
-    
+    }
 }
 ```
 
@@ -93,12 +92,12 @@ public class Player : MonoBehaviour
 {
     public int Hp
     {
-	    get => Hp;
-	    Set
-	    {
-    	    Hp=value;
-    	    EventManager.Instance.Trigger<EventHpGradient>(new EventHpGradient(Hp));
-	    }
+        get => Hp;
+        Set
+        {
+            Hp=value;
+            EventManager.Instance.Trigger<EventHpGradient>(new EventHpGradient(Hp));
+        }
     }
 }
 ```
