@@ -46,6 +46,12 @@ namespace EG.Event
         /// <param name="onEvent">事件触发后的回调方法</param>
         void UnRegister<TEvent>(Action<TEvent> onEvent);
 
-        void UnRegister<TEvent>(object key, Action<TEvent> onEvent);
+        /// <summary>
+        /// 注销事件，用于简单事件
+        /// </summary>
+        /// <param name="eventName">事件名</param>
+        /// <param name="onEvent">事件触发后的回调方法</param>
+        /// <typeparam name="TEvent">事件类型，此处为基础数据类型</typeparam>
+        void UnRegister<TEvent>(object eventName, Action<TEvent> onEvent);
     }
 }
