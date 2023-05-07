@@ -59,14 +59,7 @@ namespace EG.Event
         /// <param name="transform">游戏物体</param>
         public static void Bind(this IUnRegister unRegister, Transform transform)
         {
-            var trigger = transform.gameObject.GetComponent<UnRegisterTrigger>();
-
-            if (!trigger)
-            {
-                trigger = transform.gameObject.AddComponent<UnRegisterTrigger>();
-            }
-
-            trigger.AddUnRegister(unRegister);
+            Bind(unRegister, transform.gameObject);
         }
 
         /// <summary>
@@ -76,14 +69,7 @@ namespace EG.Event
         /// <param name="transform">游戏物体</param>
         public static void Bind(this IUnRegister unRegister, MonoBehaviour mono)
         {
-            var trigger = mono.gameObject.GetComponent<UnRegisterTrigger>();
-
-            if (!trigger)
-            {
-                trigger = mono.gameObject.AddComponent<UnRegisterTrigger>();
-            }
-
-            trigger.AddUnRegister(unRegister);
+            Bind(unRegister, mono.gameObject);
         }
     }
 }
