@@ -95,7 +95,7 @@ public class Player : MonoBehaviour
     {
 	    get => Hp;
 	    Set
-	    { 
+	    {
 		    Hp=value;
 		    EventManager.Instance.Trigger<EventHpGradient>(new EventHpGradient(Hp));
 	    }
