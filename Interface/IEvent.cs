@@ -31,13 +31,13 @@ namespace EG.Event
         /// <returns></returns>
         IUnRegister Register<TEvent>(Action<TEvent> onEvent) where TEvent : new();
         /// <summary>
-        /// 监听器，用于简单事件，即参数只有基础类型的事件
+        /// 注册事件，用于简单事件，即参数只有基础类型的事件
         /// </summary>
         /// <param name="eventName">事件名</param>
         /// <param name="onEvent">事件触发后回调方法</param>
         /// <typeparam name="TEvent">事件类型，此处为基础数据类型</typeparam>
         /// <returns></returns>
-        IUnRegister AddListener<TEvent>(object eventName, Action<TEvent> onEvent) where TEvent : struct;
+        IUnRegister Register<TEvent>(object eventName, Action<TEvent> onEvent) where TEvent : struct;
 
         /// <summary>
         /// 注销事件

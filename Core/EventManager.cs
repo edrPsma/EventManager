@@ -35,7 +35,7 @@ namespace EG.Event
         #region 成员变量
         Dictionary<object, IRegisterations> mEventDir = new Dictionary<object, IRegisterations>();
         //用于缓存BindableProperty中首次触发的事件
-        Dictionary<object, object> mCacheList = new Dictionary<object, object>();
+        Dictionary<object, object> mBindablePropertyCacheList = new Dictionary<object, object>();
         #endregion
 
         #region 接口实现
@@ -54,8 +54,7 @@ namespace EG.Event
             return new UnRegister<TEvent>() { onEvent = onEvent, Event = this, EventName = type };
         }
 
-        /// <returns></returns>
-        public IUnRegister AddListener<TEvent>(object eventName, Action<TEvent> onEvent) where TEvent : struct
+        public IUnRegister Register<TEvent>(object eventName, Action<TEvent> onEvent) where TEvent : struct
         {
             IRegisterations registerations;
 
@@ -123,20 +122,21 @@ namespace EG.Event
         #region Fun
         public void AddBindablePropertyCache(object eventName, object value)
         {
-            if (mCacheList.ContainsKey(eventName)) return;
+            if (mBindablePropertyCacheList.ContainsKey(eventName)) return;
 
-            mCacheList.Add(eventName, value);
+            mBindablePropertyCacheList.Add(eventName, value);
         }
 
         void TriggerBindablePropertyInFirst<TEvent>(object eventName)
         {
-            foreach (var item in mCacheList)
+            foreach (var item in mBindablePropertyCacheList)
             {
                 if (item.Key.Equals(eventName))
                 {
                     Trigger<TEvent>(eventName, (TEvent)item.Value);
                 }
             }
+            mBindablePropertyCacheList.Clear();
         }
 
         #endregion
