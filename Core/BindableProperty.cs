@@ -9,6 +9,7 @@ namespace EG.Event
     {
         #region 字段
         private T mValue = default(T);
+        private readonly object mEventName;
         #endregion
 
         #region 属性
@@ -23,19 +24,19 @@ namespace EG.Event
                 if (!value.Equals(mValue))
                 {
                     mValue = value;
-                    Synchronization();
+                    Synchronize(Synchronization);
                 }
             }
         }
 
-        public object EventName { get; set; }
+        public bool Synchronization { get; set; } = true;
         #endregion
 
         #region 构造函数
         public BindableProperty(object eventName, T value, bool runInFirst = true)
         {
             mValue = value;
-            EventName = eventName;
+            mEventName = eventName;
 
             if (runInFirst)
             {
@@ -45,9 +46,11 @@ namespace EG.Event
         #endregion
 
         #region Fun
-        private void Synchronization()
+        private void Synchronize(bool trigger)
         {
-            EventManager.Instance.Trigger<T>(EventName, Value);
+            if (!trigger) return;
+
+            EventManager.Instance.Trigger<T>(mEventName, Value);
         }
         #endregion
     }
