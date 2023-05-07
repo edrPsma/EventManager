@@ -2,7 +2,7 @@ using System;
 
 namespace EG.Event
 {
-    public interface IEvent
+    public interface IEventManager
     {
         /// <summary>
         /// 触发事件

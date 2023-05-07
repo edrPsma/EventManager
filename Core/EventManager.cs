@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EG.Event
 {
-    public class EventManager : IEvent
+    public class EventManager : IEventManager
     {
         #region 类定义
         interface IRegisterations { }
@@ -17,8 +17,8 @@ namespace EG.Event
 
         #region 单例模式
         private EventManager() { }
-        static IEvent mInstance;
-        public static IEvent Instance
+        static IEventManager mInstance;
+        public static IEventManager Instance
         {
             get
             {

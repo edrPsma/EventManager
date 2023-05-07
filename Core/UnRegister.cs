@@ -11,7 +11,7 @@ namespace EG.Event
         /// <summary>
         /// 事件接口
         /// </summary>
-        public IEvent Event;
+        public IEventManager Event;
         /// <summary>
         /// 回调委托
         /// </summary>
