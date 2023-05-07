@@ -54,7 +54,7 @@ namespace EG.Event
             return new UnRegister<TEvent>() { onEvent = onEvent, Event = this, EventName = type };
         }
 
-        public IUnRegister Register<TEvent>(object eventName, Action<TEvent> onEvent) where TEvent : struct
+        public IUnRegister Register<TEvent>(object eventName, Action<TEvent> onEvent)
         {
             IRegisterations registerations;
 
