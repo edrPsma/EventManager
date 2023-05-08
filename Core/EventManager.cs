@@ -42,16 +42,7 @@ namespace EG.Event
         public IUnRegister Register<TEvent>(Action<TEvent> onEvent) where TEvent : new()
         {
             var type = typeof(TEvent);
-            IRegisterations registerations;
-
-            if (!mEventDir.TryGetValue(type, out registerations))
-            {
-                registerations = new Registerations<TEvent>();
-                mEventDir.Add(type, registerations);
-            }
-
-            (registerations as Registerations<TEvent>).onEvent += onEvent;
-            return new UnRegister<TEvent>() { onEvent = onEvent, Event = this, EventName = type };
+            return Register<TEvent>(type, onEvent);
         }
 
         public IUnRegister Register<TEvent>(object eventName, Action<TEvent> onEvent)
@@ -64,7 +55,12 @@ namespace EG.Event
                 mEventDir.Add(eventName, registerations);
             }
 
-            (registerations as Registerations<TEvent>).onEvent += onEvent;
+            var r = (registerations as Registerations<TEvent>);
+            if (r == null)
+            {
+                throw new DuplicateEventNameException(eventName.ToString());
+            }
+            r.onEvent += onEvent;
 
             TriggerBindablePropertyInFirst<TEvent>(eventName);
 
@@ -89,30 +85,20 @@ namespace EG.Event
         public void Trigger<TEvent>(TEvent e)
         {
             var type = typeof(TEvent);
-            IRegisterations registerations;
-
-            if (mEventDir.TryGetValue(type, out registerations))
-            {
-                (registerations as Registerations<TEvent>).onEvent(e);
-            }
+            Trigger<TEvent>(type, e);
         }
 
         public void UnRegister<TEvent>(Action<TEvent> onEvent)
         {
             var type = typeof(TEvent);
-            IRegisterations registerations;
-
-            if (mEventDir.TryGetValue(type, out registerations))
-            {
-                (registerations as Registerations<TEvent>).onEvent -= onEvent;
-            }
+            UnRegister<TEvent>(type, onEvent);
         }
 
-        public void UnRegister<TEvent>(object key, Action<TEvent> onEvent)
+        public void UnRegister<TEvent>(object eventName, Action<TEvent> onEvent)
         {
             IRegisterations registerations;
 
-            if (mEventDir.TryGetValue(key, out registerations))
+            if (mEventDir.TryGetValue(eventName, out registerations))
             {
                 (registerations as Registerations<TEvent>).onEvent -= onEvent;
             }
@@ -129,14 +115,10 @@ namespace EG.Event
 
         void TriggerBindablePropertyInFirst<TEvent>(object eventName)
         {
-            foreach (var item in mBindablePropertyCacheList)
+            if (mBindablePropertyCacheList.ContainsKey(eventName))
             {
-                if (item.Key.Equals(eventName))
-                {
-                    Trigger<TEvent>(eventName, (TEvent)item.Value);
-                }
+                Trigger<TEvent>(eventName, (TEvent)mBindablePropertyCacheList[eventName]);
             }
-            mBindablePropertyCacheList.Clear();
         }
 
         #endregion
