@@ -118,6 +118,7 @@ namespace EG.Event
             if (mBindablePropertyCacheList.ContainsKey(eventName))
             {
                 Trigger<TEvent>(eventName, (TEvent)mBindablePropertyCacheList[eventName]);
+                mBindablePropertyCacheList.Remove(eventName);
             }
         }
 
