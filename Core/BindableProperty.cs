@@ -5,12 +5,14 @@ using UnityEngine;
 
 namespace EG.Event
 {
-    public class BindableProperty<T> where T : IEquatable<T>
+    public class BindableProperty<T> : IBindableProperty where T : IEquatable<T>
     {
         #region 字段
-        private T mValue = default(T);
         private readonly object mEventName;
+        private IBindableProperty self;
         #endregion
+
+        object IBindableProperty.Value { get; set; } = default(T);
 
         #region 属性
         /// <summary>
@@ -18,12 +20,12 @@ namespace EG.Event
         /// </summary>
         public T Value
         {
-            get => mValue;
+            get => (T)self.Value;
             set
             {
-                if (!value.Equals(mValue))
+                if (!value.Equals(self.Value))
                 {
-                    mValue = value;
+                    self.Value = value;
                     Synchronize(Synchronization);
                 }
             }
@@ -35,12 +37,13 @@ namespace EG.Event
         #region 构造函数
         public BindableProperty(object eventName, T value, bool runInFirst = true)
         {
-            mValue = value;
+            self = (this as IBindableProperty);
+            self.Value = value;
             mEventName = eventName;
 
             if (runInFirst)
             {
-                (EventManager.Instance as EventManager).AddBindablePropertyCache(eventName, value);
+                (EventManager.Instance as EventManager).AddBindablePropertyCache(eventName, this);
             }
         }
         #endregion

@@ -35,7 +35,7 @@ namespace EG.Event
         #region 成员变量
         Dictionary<object, IRegisterations> mEventDir = new Dictionary<object, IRegisterations>();
         //用于缓存BindableProperty中首次触发的事件
-        Dictionary<object, object> mBindablePropertyCacheList = new Dictionary<object, object>();
+        Dictionary<object, IBindableProperty> mBindablePropertyCacheList = new Dictionary<object, IBindableProperty>();
         #endregion
 
         #region 接口实现
@@ -106,19 +106,18 @@ namespace EG.Event
         #endregion
 
         #region Fun
-        public void AddBindablePropertyCache(object eventName, object value)
+        public void AddBindablePropertyCache(object eventName, IBindableProperty bindableProperty)
         {
             if (mBindablePropertyCacheList.ContainsKey(eventName)) return;
 
-            mBindablePropertyCacheList.Add(eventName, value);
+            mBindablePropertyCacheList.Add(eventName, bindableProperty);
         }
 
         void TriggerBindablePropertyInFirst<TEvent>(object eventName)
         {
             if (mBindablePropertyCacheList.ContainsKey(eventName))
             {
-                Trigger<TEvent>(eventName, (TEvent)mBindablePropertyCacheList[eventName]);
-                mBindablePropertyCacheList.Remove(eventName);
+                Trigger<TEvent>(eventName, (TEvent)mBindablePropertyCacheList[eventName].Value);
             }
         }
 
