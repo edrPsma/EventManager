@@ -5,7 +5,7 @@ using EG;
 using EG.Event;
 using UnityEngine;
 
-public class EventSource<TSource> : IEventSource
+public class EventSource : IEventSource
 {
     #region 类定义
     interface IRegisterations { }

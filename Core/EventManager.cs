@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EG.Event
 {
-    public class EventManager : EventSource<EventManager>, IEventManager
+    public class EventManager : EventSource, IEventManager
     {
         Dictionary<object, IEventSource> mSourceDic;
         #region 单例模式
@@ -29,22 +29,22 @@ namespace EG.Event
         public IEventSource CreateEvenntSource<TSource>()
         {
             var key = typeof(TSource);
-            return CreateEvenntSource<TSource>(key);
+            return CreateEvenntSource(key);
         }
 
-        public IEventSource CreateEvenntSource<TSource>(object key)
+        public IEventSource CreateEvenntSource(object key)
         {
             if (mSourceDic.ContainsKey(key))
             {
-                throw new DuplicateEventSourceException(key.ToString(), mSourceDic[key].GetType().ToString(), typeof(TSource).ToString());
+                throw new DuplicateEventSourceException(key.ToString());
             }
 
-            var result = new EventSource<TSource>(key.ToString());
+            var result = new EventSource(key.ToString());
             mSourceDic.Add(key, result);
             return result;
         }
 
-        public IEventSource GetEventSource<TSource>(object key)
+        public IEventSource GetEventSource(object key)
         {
             if (!mSourceDic.ContainsKey(key)) return null;
 
@@ -54,7 +54,7 @@ namespace EG.Event
         public IEventSource GetEventSource<TSource>()
         {
             var key = typeof(TSource);
-            return GetEventSource<TSource>(key);
+            return GetEventSource(key);
         }
         #endregion
     }

@@ -17,17 +17,15 @@ namespace EG.Event
         /// 创建事件源
         /// </summary>
         /// <param name="key">事件源编号</param>
-        /// <typeparam name="TSource">事件源类型</typeparam>
         /// <returns></returns>
-        IEventSource CreateEvenntSource<TSource>(object key);
+        IEventSource CreateEvenntSource(object key);
 
         /// <summary>
         /// 获取事件源
         /// </summary>
         /// <param name="key">事件源编号</param>
-        /// <typeparam name="TSource">事件源类型</typeparam>
         /// <returns></returns>
-        IEventSource GetEventSource<TSource>(object key);
+        IEventSource GetEventSource(object key);
 
 
         /// <summary>
