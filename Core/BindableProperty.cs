@@ -38,9 +38,9 @@ namespace EG.Event
         #region 构造函数
         public BindableProperty(object eventName, T value, bool runInFirst = true) : this(source: EventManager.Instance, eventName, value, runInFirst) { }
 
-        public BindableProperty(object sourceKey, object eventName, T value, bool runInFirst = true) : this(source: EventManager.Instance.CreateEvenntSource(sourceKey), eventName, value, runInFirst) { }
+        public BindableProperty(object sourceKey, object eventName, T value, bool runInFirst = true) : this(source: EventManager.Instance.CreateOrGetEvenntSource(sourceKey), eventName, value, runInFirst) { }
 
-        public BindableProperty(IEventSource source, object eventName, T value, bool runInFirst = true)
+        private BindableProperty(IEventSource source, object eventName, T value, bool runInFirst = true)
         {
             self = (this as IBindableProperty);
             self.Value = value;

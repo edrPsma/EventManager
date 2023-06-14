@@ -6,7 +6,7 @@ namespace EG.Event
 {
     public class EventManager : EventSource, IEventManager
     {
-        Dictionary<object, IEventSource> mSourceDic;
+        Dictionary<object, IEventSource> mSourceDic = new Dictionary<object, IEventSource>();
         #region 单例模式
         private EventManager(string sourceName) : base(sourceName) { }
         static EventManager mInstance;
@@ -17,8 +17,6 @@ namespace EG.Event
                 if (mInstance == null)
                 {
                     mInstance = new EventManager(typeof(EventManager).ToString());
-                    var self = (mInstance as EventManager);
-                    self.mSourceDic = new Dictionary<object, IEventSource>();
                 }
                 return mInstance;
             }
@@ -26,35 +24,22 @@ namespace EG.Event
         #endregion
 
         #region 接口实现
-        public IEventSource CreateEvenntSource<TSource>()
+        public IEventSource CreateOrGetEvenntSource<TSource>()
         {
             var key = typeof(TSource);
-            return CreateEvenntSource(key);
+            return CreateOrGetEvenntSource(key);
         }
 
-        public IEventSource CreateEvenntSource(object key)
+        public IEventSource CreateOrGetEvenntSource(object key)
         {
             if (mSourceDic.ContainsKey(key))
             {
-                throw new DuplicateEventSourceException(key.ToString());
+                return mSourceDic[key];
             }
 
             var result = new EventSource(key.ToString());
             mSourceDic.Add(key, result);
             return result;
-        }
-
-        public IEventSource GetEventSource(object key)
-        {
-            if (!mSourceDic.ContainsKey(key)) return null;
-
-            return mSourceDic[key];
-        }
-
-        public IEventSource GetEventSource<TSource>()
-        {
-            var key = typeof(TSource);
-            return GetEventSource(key);
         }
         #endregion
     }
