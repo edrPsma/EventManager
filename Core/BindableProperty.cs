@@ -40,7 +40,7 @@ namespace EG.Event
 
         public BindableProperty(object sourceKey, object eventName, T value, bool runInFirst = true) : this(source: EventManager.Instance.CreateOrGetEvenntSource(sourceKey), eventName, value, runInFirst) { }
 
-        private BindableProperty(IEventSource source, object eventName, T value, bool runInFirst = true)
+        public BindableProperty(IEventSource source, object eventName, T value, bool runInFirst = true)
         {
             self = (this as IBindableProperty);
             self.Value = value;
