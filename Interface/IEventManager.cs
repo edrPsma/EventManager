@@ -1,57 +1,41 @@
-using System;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace EG.Event
 {
     public interface IEventManager
     {
         /// <summary>
-        /// 触发事件
+        /// 创建事件源，使用Type作为key值
         /// </summary>
-        /// <typeparam name="TEvent">事件类型</typeparam>
-        void Trigger<TEvent>() where TEvent : new();
-        /// <summary>
-        /// 触发事件
-        /// </summary>
-        /// <typeparam name="T">事件类型</typeparam>
-        /// <param name="e">事件实例</param>
-        void Trigger<TEvent>(TEvent e);
-        /// <summary>
-        /// 触发事件，用于基础数据类型
-        /// </summary>
-        /// <param name="eventName">事件名</param>
-        /// <param name="e">事件实例</param>
-        /// <typeparam name="TEvent">事件类型</typeparam>
-        void Trigger<TEvent>(object eventName, TEvent e);
-
-        /// <summary>
-        /// 注册事件
-        /// </summary>
-        /// <typeparam name="TEvent">事件类型</typeparam>
-        /// <param name="onEvent">事件触发后的回调方法</param>
+        /// <typeparam name="TSource">事件源类型</typeparam>
         /// <returns></returns>
-        IUnRegister Register<TEvent>(Action<TEvent> onEvent) where TEvent : new();
+        IEventSource CreateEvenntSource<TSource>();
+
         /// <summary>
-        /// 注册事件，用于简单事件，即参数只有基础类型的事件
+        /// 创建事件源
         /// </summary>
-        /// <param name="eventName">事件名</param>
-        /// <param name="onEvent">事件触发后回调方法</param>
-        /// <typeparam name="TEvent">事件类型，此处为基础数据类型</typeparam>
+        /// <param name="key">事件源编号</param>
+        /// <typeparam name="TSource">事件源类型</typeparam>
         /// <returns></returns>
-        IUnRegister Register<TEvent>(object eventName, Action<TEvent> onEvent);
+        IEventSource CreateEvenntSource<TSource>(object key);
 
         /// <summary>
-        /// 注销事件
+        /// 获取事件源
         /// </summary>
-        /// <typeparam name="TEvent">事件类型</typeparam>
-        /// <param name="onEvent">事件触发后的回调方法</param>
-        void UnRegister<TEvent>(Action<TEvent> onEvent);
+        /// <param name="key">事件源编号</param>
+        /// <typeparam name="TSource">事件源类型</typeparam>
+        /// <returns></returns>
+        IEventSource GetEventSource<TSource>(object key);
+
 
         /// <summary>
-        /// 注销事件，用于简单事件
+        /// 获取事件源，使用Type作为key值
         /// </summary>
-        /// <param name="eventName">事件名</param>
-        /// <param name="onEvent">事件触发后的回调方法</param>
-        /// <typeparam name="TEvent">事件类型，此处为基础数据类型</typeparam>
-        void UnRegister<TEvent>(object eventName, Action<TEvent> onEvent);
+        /// <typeparam name="TSource">事件源类型</typeparam>
+        /// <returns></returns>
+        IEventSource GetEventSource<TSource>();
     }
+
 }

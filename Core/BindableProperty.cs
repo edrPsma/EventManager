@@ -9,6 +9,7 @@ namespace EG.Event
     {
         #region 字段
         private readonly object mEventName;
+        private readonly IEventSource mEventSource;
         private IBindableProperty self;
         #endregion
 
@@ -35,15 +36,18 @@ namespace EG.Event
         #endregion
 
         #region 构造函数
-        public BindableProperty(object eventName, T value, bool runInFirst = true)
+        public BindableProperty(object eventName, T value, bool runInFirst = true) : this(EventManager.Instance, eventName, value, runInFirst) { }
+
+        public BindableProperty(IEventSource source, object eventName, T value, bool runInFirst = true)
         {
             self = (this as IBindableProperty);
             self.Value = value;
             mEventName = eventName;
+            mEventSource = source;
 
             if (runInFirst)
             {
-                (EventManager.Instance as EventManager).AddBindablePropertyCache(eventName, this);
+                source.AddBindablePropertyCache(eventName, this);
             }
         }
         #endregion
@@ -53,7 +57,7 @@ namespace EG.Event
         {
             if (!trigger) return;
 
-            EventManager.Instance.Trigger<T>(mEventName, Value);
+            mEventSource.Trigger<T>(mEventName, Value);
         }
         #endregion
     }

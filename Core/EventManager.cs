@@ -4,125 +4,60 @@ using UnityEngine;
 
 namespace EG.Event
 {
-    public class EventManager : IEventManager
+    public class EventManager : EventSource<EventManager>, IEventManager
     {
-        #region 类定义
-        interface IRegisterations { }
-        class Registerations<TEvent> : IRegisterations
-        {
-            public Action<TEvent> onEvent = _ => { };
-        }
-
-        #endregion
-
+        Dictionary<object, IEventSource> mSourceDic;
         #region 单例模式
-        private EventManager() { }
-        static IEventManager mInstance;
-        public static IEventManager Instance
+        private EventManager(string sourceName) : base(sourceName) { }
+        static EventManager mInstance;
+        public static EventManager Instance
         {
             get
             {
                 if (mInstance == null)
                 {
-                    mInstance = new EventManager();
+                    mInstance = new EventManager(typeof(EventManager).ToString());
+                    var self = (mInstance as EventManager);
+                    self.mSourceDic = new Dictionary<object, IEventSource>();
                 }
                 return mInstance;
             }
         }
-
-        #endregion
-
-        #region 成员变量
-        Dictionary<object, IRegisterations> mEventDir = new Dictionary<object, IRegisterations>();
-        //用于缓存BindableProperty中首次触发的事件
-        Dictionary<object, IBindableProperty> mBindablePropertyCacheList = new Dictionary<object, IBindableProperty>();
         #endregion
 
         #region 接口实现
-        public IUnRegister Register<TEvent>(Action<TEvent> onEvent) where TEvent : new()
+        public IEventSource CreateEvenntSource<TSource>()
         {
-            var type = typeof(TEvent);
-            return Register<TEvent>(type, onEvent);
+            var key = typeof(TSource);
+            return CreateEvenntSource<TSource>(key);
         }
 
-        public IUnRegister Register<TEvent>(object eventName, Action<TEvent> onEvent)
+        public IEventSource CreateEvenntSource<TSource>(object key)
         {
-            IRegisterations registerations;
-
-            if (!mEventDir.TryGetValue(eventName, out registerations))
+            if (mSourceDic.ContainsKey(key))
             {
-                registerations = new Registerations<TEvent>();
-                mEventDir.Add(eventName, registerations);
+                throw new DuplicateEventSourceException(key.ToString(), mSourceDic[key].GetType().ToString(), typeof(TSource).ToString());
             }
 
-            var r = (registerations as Registerations<TEvent>);
-            if (r == null)
-            {
-                throw new DuplicateEventNameException(eventName.ToString());
-            }
-            r.onEvent += onEvent;
-
-            TriggerBindablePropertyInFirst<TEvent>(eventName);
-
-            return new UnRegister<TEvent>() { onEvent = onEvent, Event = this, EventName = eventName };
+            var result = new EventSource<TSource>(key.ToString());
+            mSourceDic.Add(key, result);
+            return result;
         }
 
-        public void Trigger<TEvent>() where TEvent : new()
+        public IEventSource GetEventSource<TSource>(object key)
         {
-            var e = new TEvent();
-            Trigger<TEvent>(e);
+            if (!mSourceDic.ContainsKey(key)) return null;
+
+            return mSourceDic[key];
         }
 
-        public void Trigger<TEvent>(object eventName, TEvent e)
+        public IEventSource GetEventSource<TSource>()
         {
-            IRegisterations registerations;
-            if (mEventDir.TryGetValue(eventName, out registerations))
-            {
-                (registerations as Registerations<TEvent>).onEvent(e);
-            }
-        }
-
-        public void Trigger<TEvent>(TEvent e)
-        {
-            var type = typeof(TEvent);
-            Trigger<TEvent>(type, e);
-        }
-
-        public void UnRegister<TEvent>(Action<TEvent> onEvent)
-        {
-            var type = typeof(TEvent);
-            UnRegister<TEvent>(type, onEvent);
-        }
-
-        public void UnRegister<TEvent>(object eventName, Action<TEvent> onEvent)
-        {
-            IRegisterations registerations;
-
-            if (mEventDir.TryGetValue(eventName, out registerations))
-            {
-                (registerations as Registerations<TEvent>).onEvent -= onEvent;
-            }
+            var key = typeof(TSource);
+            return GetEventSource<TSource>(key);
         }
         #endregion
-
-        #region Fun
-        public void AddBindablePropertyCache(object eventName, IBindableProperty bindableProperty)
-        {
-            if (mBindablePropertyCacheList.ContainsKey(eventName)) return;
-
-            mBindablePropertyCacheList.Add(eventName, bindableProperty);
-        }
-
-        void TriggerBindablePropertyInFirst<TEvent>(object eventName)
-        {
-            if (mBindablePropertyCacheList.ContainsKey(eventName))
-            {
-                Trigger<TEvent>(eventName, (TEvent)mBindablePropertyCacheList[eventName].Value);
-            }
-        }
-
-        #endregion
-
-
     }
+
 }
+
