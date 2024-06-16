@@ -22,6 +22,7 @@
         }
       }
     }
+  },
   "libraries": {
     "Ev/1.0.0": {
       "type": "project",
