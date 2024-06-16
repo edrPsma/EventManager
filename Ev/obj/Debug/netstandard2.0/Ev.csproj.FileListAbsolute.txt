@@ -1,0 +1,10 @@
+D:\EventManager\Ev\bin\Debug\netstandard2.0\Ev.deps.json
+D:\EventManager\Ev\bin\Debug\netstandard2.0\Ev.dll
+D:\EventManager\Ev\bin\Debug\netstandard2.0\Ev.pdb
+D:\EventManager\Ev\obj\Debug\netstandard2.0\Ev.csproj.AssemblyReference.cache
+D:\EventManager\Ev\obj\Debug\netstandard2.0\Ev.GeneratedMSBuildEditorConfig.editorconfig
+D:\EventManager\Ev\obj\Debug\netstandard2.0\Ev.AssemblyInfoInputs.cache
+D:\EventManager\Ev\obj\Debug\netstandard2.0\Ev.AssemblyInfo.cs
+D:\EventManager\Ev\obj\Debug\netstandard2.0\Ev.csproj.CoreCompileInputs.cache
+D:\EventManager\Ev\obj\Debug\netstandard2.0\Ev.dll
+D:\EventManager\Ev\obj\Debug\netstandard2.0\Ev.pdb
