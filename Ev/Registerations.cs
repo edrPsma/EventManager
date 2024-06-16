@@ -28,5 +28,10 @@ namespace Ev
         {
             onEvent.Invoke((TEvent)e);
         }
+
+        public void Trigger<T>(T e) where T : TEvent
+        {
+            onEvent.Invoke(e);
+        }
     }
 }

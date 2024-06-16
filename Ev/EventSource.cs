@@ -105,7 +105,7 @@ namespace Ev
             IRegisterations registerations;
             if (_eventDir.TryGetValue(eventName, out registerations))
             {
-                registerations.Trigger(e);
+                (registerations as Registerations<TEvent>).Trigger(e);
             }
         }
 
